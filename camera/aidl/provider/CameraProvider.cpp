@@ -457,6 +457,10 @@ ndk::ScopedAStatus CameraProvider::getCameraDeviceInterface(
 }
 
 ndk::ScopedAStatus CameraProvider::notifyDeviceStateChange(int64_t newState) {
+    if (mModule == nullptr) {
+        ALOGE("%s: Camera HAL module is not initialized", __FUNCTION__);
+        return fromStatus(Status::INTERNAL_ERROR);
+    }
     ALOGD("%s: New device state: 0x%" PRIx64, __FUNCTION__, newState);
     uint64_t state = static_cast<uint64_t>(newState);
     mModule->notifyDeviceStateChange(state);
